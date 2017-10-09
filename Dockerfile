@@ -11,5 +11,5 @@ RUN yarn --pure-lockfile
 
 COPY . /usr/src/app
 
-EXPOSE 3000
+EXPOSE 8000
 CMD [ "pm2-docker", "start", "npm", "--", "start" ]

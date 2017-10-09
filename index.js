@@ -8,7 +8,7 @@ const { makeExecutableSchema } = require('graphql-tools');
 const types = require('./schema');
 const resolvers = require('./resolvers');
 
-const PORT = 3000;
+const PORT = 8000;
 
 const app = express();
 
