@@ -21,11 +21,27 @@ app.use(
     // Optional, defaults to OS temp directory
     uploadDir: '/uploads',
   }),
-  graphqlExpress({ schema: makeExecutableSchema({ typeDefs: [types], resolvers }) })
+  graphqlExpress({
+    schema: makeExecutableSchema({ typeDefs: [types], resolvers }),
+    debug: true,
+  })
 );
 
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));
 
-app.listen(PORT);
+app.get('/', (req, res) => {
+  res.status(200).send('OK');
+});
+
+const listener = app.listen(PORT, () => {
+  let host = listener.address().address;
+  if (host === '::') {
+    host = 'localhost';
+  }
+  const { port } = listener.address();
+  /* eslint-disable no-console */
+  console.log('Listening at http://%s%s', host, port === 80 ? '' : `:${port}`);
+  /* eslint-enable no-console */
+});
