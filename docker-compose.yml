@@ -1,5 +1,6 @@
 web:
   build: nginx/
+  image: computecoholic/nginx
   ports: 
     - "80:80"
   links: 
@@ -7,6 +8,7 @@ web:
 
 app:
   build: app/
+  image: computecoholic/neo-graphql-server
   ports:
     - "8080:8000"
 
