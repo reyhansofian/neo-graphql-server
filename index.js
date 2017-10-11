@@ -19,7 +19,7 @@ app.use(
   bodyParser.json(),
   apolloUploadExpress({
     // Optional, defaults to OS temp directory
-    uploadDir: '/uploads',
+    uploadDir: './public/uploads',
   }),
   graphqlExpress({
     schema: makeExecutableSchema({ typeDefs: [types], resolvers }),
@@ -27,6 +27,7 @@ app.use(
   })
 );
 
+app.use('/gallery', express.static(`${__dirname}/public/uploads`));
 app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql',
 }));

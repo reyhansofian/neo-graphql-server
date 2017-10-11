@@ -15,12 +15,12 @@ const Schema = `
   }
 
   type Query {
-    uploads: [Gallery]
+    gallery: [Gallery]
   }
 
   type Mutation {
-    singleUpload (file: Upload!): Gallery!
-    multipleUpload (files: [Upload!]!): [Gallery!]!
+    singleUpload (image: Upload!): Gallery!
+    updateGallery (images: [Upload!]!): [Gallery!]!
   }
 `;
 
