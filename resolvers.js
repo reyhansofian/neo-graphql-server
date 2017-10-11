@@ -3,6 +3,7 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const readChunk = require('read-chunk');
 const fileType = require('file-type');
+const uuid = require('uuid');
 
 const db = low(new FileSync('db.json'));
 
@@ -13,7 +14,7 @@ const getAllImages = () => db.get('gallery').value();
 const saveFile = file =>
   db
     .get('gallery')
-    .push({ id: file.path, ...file })
+    .push({ id: uuid.v4(), ...file })
     .last()
     .write();
 
