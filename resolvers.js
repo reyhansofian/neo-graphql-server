@@ -18,46 +18,45 @@ const saveFile = file =>
     .last()
     .write();
 
+const processImage = image => {
+  const fileTypeBuffer = readChunk.sync(image.path, 0, 4100);
+  const type = fileType(fileTypeBuffer);
+
+  if (!type) {
+    // check
+    throw new Error('Wrong file type.');
+  }
+
+  const newFileName = image.name.split(' ').join('-');
+  const newPath = `public/uploads/${newFileName}`;
+
+  // Rename file based on image name
+  fs.rename(image.path, newPath, (err) => {
+    if (err) {
+      throw new Error('Cannot rename file', err);
+    }
+
+    // Change image path after rename file
+    const newMetadata = {
+      ...image,
+      path: newPath,
+    };
+
+    // Save file to persistence
+    saveFile(newMetadata);
+  });
+};
+
 module.exports = {
   Query: {
-    gallery: () => db.get('gallery').value(),
+    gallery: () => getAllImages(),
   },
   Mutation: {
-    singleUpload: (_, { file }) => saveFile(file),
     updateGallery: (_, { images }) => {
       console.log('New images for gallery:', images);
 
-      images.forEach(image => {
-        const fileTypeBuffer = readChunk.sync(image.path, 0, 4100);
-        const type = fileType(fileTypeBuffer);
-
-        if (!type) {
-          // check
-          throw new Error('Wrong file type.');
-        }
-
-        const newFileName = image.name.split(' ').join('-');
-        const newPath = `public/uploads/${newFileName}`;
-
-        // Rename file based on image name
-        fs.rename(image.path, newPath, (err) => {
-          if (err) {
-            throw new Error('Cannot rename file', err);
-          }
-
-          // Change image path after rename file
-          const newMetadata = {
-            ...image,
-            path: newPath,
-          };
-
-          // Save file to persistence
-          saveFile(newMetadata);
-        });
-      });
-
-      // Always return all images from persistence
-      return getAllImages();
+      return Promise.all(images.map(processImage))
+        .then(() => getAllImages());
     },
   },
 };
