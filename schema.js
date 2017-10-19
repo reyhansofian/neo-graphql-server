@@ -19,7 +19,6 @@ const Schema = `
   }
 
   type Mutation {
-    singleUpload (image: Upload!): Gallery!
     updateGallery (images: [Upload!]!): [Gallery!]!
   }
 `;
