@@ -47,6 +47,10 @@ const processImage = image => {
   });
 };
 
+const delay = (t) => new Promise(((resolve) => {
+  setTimeout(resolve, t);
+}));
+
 module.exports = {
   Query: {
     gallery: () => getAllImages(),
@@ -55,8 +59,10 @@ module.exports = {
     updateGallery: (_, { images }) => {
       console.log('New images for gallery:', images);
 
+      // Because we use FileSync adapter,
+      // all processed images won't be readable after write to db
       return Promise.all(images.map(processImage))
-        .then(() => getAllImages());
+        .then(() => delay(0).then(() => getAllImages()));
     },
   },
 };
